@@ -1,0 +1,22 @@
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/javascripts/vendor/jquery.min.js"><\/script>')</script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="/javascripts/vendor/holder.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/javascripts/ie10-viewport-bug-workaround.js"></script>
+
+    <script src="/javascripts/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost:3000');
+      $('.btn.btn-default').submit(function() {
+        // socket.emit('bill_accepted', $('#m').val());
+        socket.emit('bill_accepted', 'Hello World!');
+        return false;
+      });
+    </script>
+  </body>
+</html>
