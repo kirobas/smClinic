@@ -10,13 +10,6 @@
     <script src="/javascripts/ie10-viewport-bug-workaround.js"></script>
 
     <script src="/javascripts/socket.io.js"></script>
-    <script>
-      var socket = io.connect('http://localhost:3000');
-      $('.btn.btn-default').submit(function() {
-        // socket.emit('bill_accepted', $('#m').val());
-        socket.emit('bill_accepted', 'Hello World!');
-        return false;
-      });
-    </script>
+    <script src="/javascripts/client.js"></script>
   </body>
 </html>

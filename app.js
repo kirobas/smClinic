@@ -7,13 +7,15 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var mustacheExpress = require('mustache-express');
 var session = require('express-session');
-http = require('http');
+var http = require('http');
 
 
 var routes = require('./routes/index');
 
+var satelize = require('satelize');
+var clients = require(__dirname + '/inc/clients');
+
 var app = express();
-// var server = require('http').Server(app);
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
@@ -43,10 +45,18 @@ app.use(session({
 
 app.use('/', routes);
 
-io.on('connection', function(socket) {
-  socket.on('bill_accepted', function(msg){
-    console.log('message: ' + msg);
-  });
+io.sockets.on('connection', function (socket) {
+    clients.init(satelize,socket, function () {
+        var client = clients.fetchClient(socket.id);
+        socket.emit('client info', client);
+        socket.on('message', function (msg) {
+            console.log('Message recieved from ' + client.id);
+            socket.emit('client info', client);
+        });
+        socket.on('disconnect', function () {
+            clients.removeClient(client);
+        });
+    });
 });
 
 // catch 404 and forward to error handler
