@@ -12,8 +12,8 @@ var http = require('http');
 
 var routes = require('./routes/index');
 
-var satelize = require('satelize');
-var clients = require(__dirname + '/inc/clients');
+// var satelize = require('satelize');
+// var clients = require(__dirname + '/inc/clients');
 
 var app = express();
 var server = http.createServer(app);
@@ -45,18 +45,13 @@ app.use(session({
 
 app.use('/', routes);
 
-io.sockets.on('connection', function (socket) {
-    clients.init(satelize,socket, function () {
-        var client = clients.fetchClient(socket.id);
-        socket.emit('client info', client);
-        socket.on('message', function (msg) {
-            console.log('Message recieved from ' + client.id);
-            socket.emit('client info', client);
-        });
-        socket.on('disconnect', function () {
-            clients.removeClient(client);
-        });
-    });
+io.on('connection', function(socket) {  
+  console.log('a user with id = ' + socket.id + ' connected');
+  socket.emit('a user with id = ' + socket.id + ' connected');
+
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
 });
 
 // catch 404 and forward to error handler
