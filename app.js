@@ -14,6 +14,8 @@ var routes = require('./routes/index');
 
 // var satelize = require('satelize');
 // var clients = require(__dirname + '/inc/clients');
+var bills = require(__dirname + '/inc/bills');
+
 
 var app = express();
 var server = http.createServer(app);
@@ -45,13 +47,20 @@ app.use(session({
 
 app.use('/', routes);
 
-io.on('connection', function(socket) {  
-  console.log('a user with id = ' + socket.id + ' connected');
-  socket.emit('a user with id = ' + socket.id + ' connected');
-
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+io.sockets.on('connection', function(socket) {
+    bills.init(socket, function () {
+        var bill = bills.fetchBill(socket.id);
+        var time = new Date;
+        socket.emit('message', { event: 'connected', id: bill.id, value: bill.value, time: time.toLocaleString()});
+        socket.on('message', function (msg) {
+            console.log('Message recieved from ' + bill.id);
+            socket.emit('bill info', bill);
+        });
+        socket.on('disconnect', function () {
+            bills.removeBill(bill);
+            socket.emit('message', { event: 'disconnected', time: time.toLocaleString()});
+        });
+    });
 });
 
 // catch 404 and forward to error handler
