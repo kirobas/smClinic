@@ -1,3 +1,3 @@
 # smClinic
 
-Demo: http://shumov.spb.ru:3000
+[Demo](http://shumov.spb.ru:3000)
